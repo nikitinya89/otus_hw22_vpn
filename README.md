@@ -60,7 +60,8 @@ iperf3 -s
 ```bash
 iperf3 -c 10.10.10.1 -t 40 -i 5
 ```
-![iperf1](img/iperf1.jpg)
+![iperf1](img/iperf1.jpg)  
+  
 Для выполнения задания с помощью _ansible_ запустим плэйбуки:
 ```bash
 ansible-playbook vpn-tap.yml
