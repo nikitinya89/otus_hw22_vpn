@@ -1,0 +1,14 @@
+dev tap
+{% if ansible_hostname == 'server' %}
+ifconfig 10.10.10.1 255.255.255.0
+{% elif ansible_hostname == 'client' %}
+remote 192.168.56.10
+ifconfig 10.10.10.2 255.255.255.0
+route 192.168.56.0 255.255.255.0
+{% endif %}
+topology subnet
+secret /etc/openvpn/static.key
+comp-lzo
+status /var/log/openvpn-status.log
+log /var/log/openvpn.log
+verb 3

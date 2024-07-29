@@ -1,0 +1,57 @@
+---
+- name: Install OpenVPN in tap mode
+  hosts: server
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Install packages
+      apt:
+        name:
+          - openvpn
+          - iperf3
+          - easy-rsa
+        state: present
+        update_cache: true
+
+    - name: Copy OpenVPN config file
+      template:
+        src: server-ras.conf
+        dest: /etc/openvpn/server.conf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Copy CA cert
+      template:
+        src: ca.crt
+        dest: /etc/openvpn/ca.crt
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Copy certificates
+      template:
+        src: "server.{{ item }}"
+        dest: "/etc/openvpn/server.{{ item }}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - key
+        - crt
+
+    - name: Create systemd unit
+      template:
+        src: openvpn.service
+        dest: /etc/systemd/system/openvpn@.service
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Start OpenVPN
+      systemd:
+        name: openvpn@server
+        state: restarted
+        enabled: true
+        daemon_reload: true
+...
